@@ -1,3 +1,2 @@
-# Google AdSense ads.txt template for Uni3D
-# Replace "pub-0000000000000000" with your actual Google AdSense Publisher ID
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+# Google AdSense ads.txt for Uni3D
+google.com, pub-1560865754891276, DIRECT, f08c47fec0942fa0
