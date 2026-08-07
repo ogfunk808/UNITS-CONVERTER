@@ -267,6 +267,7 @@ function triggerRecalculation() {
     
     // Calculation Process
     if (catData.isSpecial) {
+        // Use special temperature conversion function
         result = catData.convert(val, fromUnit, toUnit);
     } else {
         const fromFactor = catData.units[fromUnit].factor;
@@ -306,6 +307,7 @@ function updateOutputText(val, fromUnit, toUnit, result) {
     }
     
     formulaDisplay.textContent = `1 ${fromUnit} = ${formatNumber(baseResult)} ${toUnit}`;
+    const labelTo = createTextSprite(`${formatNumber(toVal)} ${toUnit}`, '#8b5cf6');
 
     // 4. Update the info box description
     const fromDesc = catData.units[fromUnit].description || '';
