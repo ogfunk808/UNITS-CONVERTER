@@ -282,6 +282,8 @@ function triggerRecalculation() {
     if (visualizerReady) {
         updateVisualization(currentCategory, val, fromUnit, toUnit, result);
     }
+    // Create label for result (optional, using result)
+    const labelTo = createTextSprite(`${formatNumber(result)} ${toUnit}`, '#8b5cf6');
 }
 
 // Update the numerical output elements
