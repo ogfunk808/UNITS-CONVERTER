@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uni3D - Premium Interactive 3D Unit Converter</title>
+    <meta name="description" content="An advanced, real-time 3D unit converter. Visualize lengths, areas, volumes, weights, and temperatures in an interactive 3D space with high-end glassmorphism design.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background glowing orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo-container" id="nav-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-cube logo-3d-spin"></i>
+                </div>
+                <span class="logo-text">Uni<span class="highlight">3D</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-link active" data-target="converter-section" id="btn-nav-converter">
+                    <i class="fa-solid fa-calculator"></i> Converter
+                </button>
+                <button class="nav-link" data-target="privacy-section" id="btn-nav-privacy">
+                    <i class="fa-solid fa-shield-halved"></i> Privacy Policy
+                </button>
+                <button class="nav-link" data-target="terms-section" id="btn-nav-terms">
+                    <i class="fa-solid fa-file-contract"></i> Terms of Service
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <button class="visual-preset-btn" id="btn-reset-view" title="Reset 3D Camera">
+                    <i class="fa-solid fa-arrows-spin"></i> Reset Camera
+                </button>
+            </div>
+        </header>
+
+        <!-- GOOGLE ADSENSE TOP SLOT MOCK -->
+        <div class="adsense-banner-container adsense-top" id="adsense-top-banner">
+            <span class="ads-label">Sponsored / Advertisement</span>
+            <div class="ads-mock-content">
+                <i class="fa-solid fa-rectangle-ad"></i>
+                <span>Google AdSense Banner Space (728x90)</span>
+            </div>
+        </div>
+
+        <!-- MAIN SPA CONTENT SECTIONS -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: CONVERTER -->
+            <section id="converter-section" class="spa-section active">
+                <div class="converter-grid">
+                    
+                    <!-- Left: Conversion Form -->
+                    <div class="control-panel glass-panel">
+                        <h1 class="panel-title">Smart Unit Converter</h1>
+                        <p class="panel-subtitle">Convert between units and visualize sizes dynamically in 3D.</p>
+
+                        <!-- Category Selector Grid -->
+                        <div class="category-grid" id="category-selector">
+                            <button class="category-btn active" data-category="length" id="cat-length">
+                                <i class="fa-solid fa-ruler-horizontal"></i>
+                                <span>Length</span>
+                            </button>
+                            <button class="category-btn" data-category="area" id="cat-area">
+                                <i class="fa-solid fa-chart-area"></i>
+                                <span>Area</span>
+                            </button>
+                            <button class="category-btn" data-category="volume" id="cat-volume">
+                                <i class="fa-solid fa-wine-glass-empty"></i>
+                                <span>Volume</span>
+                            </button>
+                            <button class="category-btn" data-category="mass" id="cat-mass">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                                <span>Mass</span>
+                            </button>
+                            <button class="category-btn" data-category="temperature" id="cat-temperature">
+                                <i class="fa-solid fa-temperature-half"></i>
+                                <span>Temp</span>
+                            </button>
+                        </div>
+
+                        <!-- Inputs Grid -->
+                        <div class="inputs-container">
+                            <div class="input-group">
+                                <label for="input-value" class="input-label">Enter Value</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="input-value" value="1" step="any" placeholder="Enter quantity..." autocomplete="off">
+                                    <button class="clear-input-btn" id="btn-clear-input" title="Clear input">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="selectors-row">
+                                <div class="input-group select-group">
+                                    <label for="select-from" class="input-label">From</label>
+                                    <div class="custom-select-wrapper">
+                                        <select id="select-from" class="unit-select">
+                                            <!-- Dynamically filled -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button class="swap-btn" id="btn-swap-units" title="Swap Units">
+                                    <i class="fa-solid fa-right-left"></i>
+                                </button>
+
+                                <div class="input-group select-group">
+                                    <label for="select-to" class="input-label">To</label>
+                                    <div class="custom-select-wrapper">
+                                        <select id="select-to" class="unit-select">
+                                            <!-- Dynamically filled -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Output Panel -->
+                        <div class="output-container glass-panel-inner">
+                            <div class="output-header">
+                                <span class="output-label">Result</span>
+                                <button class="copy-btn" id="btn-copy-result" title="Copy result to clipboard">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="output-formula" id="formula-display">1 m = 1 m</div>
+                            <div class="output-display">
+                                <span class="output-number" id="output-value-display">1.00</span>
+                                <span class="output-unit" id="output-unit-display">m</span>
+                            </div>
+                            <div class="output-scientific-display" id="output-scientific">1e+0</div>
+                        </div>
+                    </div>
+
+                    <!-- Right: 3D Visualization Viewport -->
+                    <div class="visualizer-panel glass-panel">
+                        <div class="visualizer-header">
+                            <div class="visualizer-title">
+                                <i class="fa-solid fa-cube glow-text"></i>
+                                <span>3D Interactive Sandbox</span>
+                            </div>
+                            <div class="visualizer-badge" id="visualization-mode-badge">Length comparison</div>
+                        </div>
+                        
+                        <div class="canvas-container">
+                            <div class="canvas-loader" id="canvas-loader">
+                                <div class="spinner"></div>
+                                <span class="loader-text">Loading 3D Sandbox...</span>
+                            </div>
+                            <canvas id="three-canvas"></canvas>
+                            
+                            <!-- Visual overlay overlays -->
+                            <div class="canvas-controls-overlay">
+                                <div class="visual-tips">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Drag to rotate | Scroll to zoom | Right-click-drag to pan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visualization-info-box" id="info-box-details">
+                            Select dimensions to see how they stack up in the 3D viewport. Change values to dynamically rescale the objects.
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 2: PRIVACY POLICY -->
+            <section id="privacy-section" class="spa-section glass-panel legal-section">
+                <h1 class="legal-title">Privacy Policy</h1>
+                <p class="legal-meta">Last Updated: August 7, 2026</p>
+
+                <div class="legal-content">
+                    <p>At Uni3D, accessible from this website, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Uni3D and how we use it.</p>
+
+                    <h2>1. General Information</h2>
+                    <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us. This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Uni3D.</p>
+
+                    <h2>2. Consent</h2>
+                    <p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+
+                    <h2>3. Information We Collect</h2>
+                    <p>Uni3D is a client-side unit converter. We do not require you to create an account, nor do we collect personal identifiers such as names, emails, or phone numbers during standard tool operation. Any input values and unit conversions you calculate are processed locally on your device and are not transmitted to or stored on our servers.</p>
+
+                    <h2>4. Log Files</h2>
+                    <p>Uni3D follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this as part of hosting services' analytics. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users' movement on the website, and gathering demographic information.</p>
+
+                    <h2>5. Google DoubleClick DART Cookies & Google AdSense</h2>
+                    <p>Google is one of the third-party vendors on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">https://policies.google.com/technologies/ads</a></p>
+                    <p>As an AdSense publisher, we adhere to Google's program policies. Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet.</p>
+
+                    <h2>6. Our Advertising Partners</h2>
+                    <p>Some of the advertisers on our site may use cookies and web beacons. Our advertising partners include:</p>
+                    <ul>
+                        <li><strong>Google AdSense</strong>: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">https://policies.google.com/technologies/ads</a></li>
+                    </ul>
+                    <p>These third-party ad servers or ad networks use technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on Uni3D, which are sent directly to users' browsers. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.</p>
+                    <p>Note that Uni3D has no access to or control over these cookies that are used by third-party advertisers.</p>
+
+                    <h2>7. Third Party Privacy Policies</h2>
+                    <p>Uni3D's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options.</p>
+                    <p>You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers' respective websites.</p>
+
+                    <h2>8. GDPR Data Protection Rights</h2>
+                    <p>We want to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
+                    <ul>
+                        <li><strong>The right to access</strong> – You have the right to request copies of your personal data.</li>
+                        <li><strong>The right to rectification</strong> – You have the right to request that we correct any information you believe is inaccurate.</li>
+                        <li><strong>The right to erasure</strong> – You have the right to request that we erase your personal data, under certain conditions.</li>
+                        <li><strong>The right to restrict processing</strong> – You have the right to request that we restrict the processing of your personal data, under certain conditions.</li>
+                        <li><strong>The right to object to processing</strong> – You have the right to object to our processing of your personal data, under certain conditions.</li>
+                        <li><strong>The right to data portability</strong> – You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.</li>
+                    </ul>
+
+                    <h2>9. Children's Information</h2>
+                    <p>Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.</p>
+                    <p>Uni3D does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.</p>
+                </div>
+            </section>
+
+            <!-- SECTION 3: TERMS OF SERVICE -->
+            <section id="terms-section" class="spa-section glass-panel legal-section">
+                <h1 class="legal-title">Terms of Service</h1>
+                <p class="legal-meta">Last Updated: August 7, 2026</p>
+
+                <div class="legal-content">
+                    <h2>1. Acceptance of Terms</h2>
+                    <p>By accessing or using the Uni3D website and tool set, you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+
+                    <h2>2. Description of Service</h2>
+                    <p>Uni3D provides visual 3D and numerical unit conversion tools. The services are provided "as is" and "as available". We reserve the right to modify, suspend, or discontinue any aspect of the service at any time without prior notice.</p>
+
+                    <h2>3. User Covenants & Disclaimer of Scientific Accuracy</h2>
+                    <p>While we strive to provide highly accurate mathematical translations and interactive 3D visualizations, **Uni3D makes no guarantees regarding the engineering, scientific, mathematical, or absolute correctness of conversions**.</p>
+                    <blockquote>
+                        <p><strong>[IMPORTANT]</strong> Do not use Uni3D for precision rocketry, medicine dosages, civil engineering load computations, financial trading units, or other critical situations where errors could lead to safety concerns or economic losses.</p>
+                    </blockquote>
+
+                    <h2>4. Intellectual Property Rights</h2>
+                    <p>All content, tools, user interfaces, 3D designs, layouts, visualizer algorithms, and assets on this website are the intellectual property of Uni3D and are protected by copyright, trademark, and other proprietary laws. You may not copy, scrape, distribute, reproduce, or resell any part of our website code or custom shaders without express written consent.</p>
+
+                    <h2>5. Advertising and Third-Party Links</h2>
+                    <p>Our website displays Google AdSense advertisements. When you interact with these advertisements, you may be redirected to third-party web platforms. We do not inspect, control, or verify the safety, legality, or products of these third-party platforms and we assume no liability for interactions or contracts you enter with them.</p>
+
+                    <h2>6. Limitation of Liability</h2>
+                    <p>In no event shall Uni3D, its developers, or affiliates be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of your access to, use of, or inability to use the site, including but not limited to conversion calculation inaccuracies, data loss, browser crash, or device compatibility issues.</p>
+
+                    <h2>7. Indemnification</h2>
+                    <p>You agree to indemnify, defend, and hold harmless Uni3D and its creators from and against any claims, liabilities, damages, losses, and expenses (including legal fees) arising out of your use of the website or violation of these Terms.</p>
+
+                    <h2>8. Governing Law</h2>
+                    <p>These terms and conditions are governed by and construed in accordance with local regulations, and you irrevocably submit to the exclusive jurisdiction of the courts in that state or location.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- GOOGLE ADSENSE SIDEBAR / BOTTOM PLACEMENTS MOCK -->
+        <aside class="adsense-bottom-sidebar">
+            <div class="adsense-banner-container adsense-footer" id="adsense-bottom-banner">
+                <span class="ads-label">Sponsored / Advertisement</span>
+                <div class="ads-mock-content">
+                    <i class="fa-solid fa-rectangle-ad"></i>
+                    <span>Google AdSense Banner Space (970x90 or 320x50 Responsive)</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <div class="footer-links">
+                <span class="footer-link-item" data-target="converter-section">Converter</span>
+                <span class="footer-link-item" data-target="privacy-section">Privacy Policy</span>
+                <span class="footer-link-item" data-target="terms-section">Terms of Service</span>
+            </div>
+            <p class="copyright">&copy; 2026 Uni3D. Designed with rich 3D graphics for beautiful, fast conversions. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- CDNs: Three.js, OrbitControls, GSAP for rendering and animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Scripts -->
+    <script type="module" src="visualizer.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
