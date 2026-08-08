@@ -64,16 +64,45 @@ const CONVERSIONS = {
         },
         convert: (val, from, to) => {
             let celsius;
-            // 1. Convert to Celsius
             if (from === '°C') celsius = val;
             else if (from === '°F') celsius = (val - 32) * 5/9;
             else if (from === 'K') celsius = val - 273.15;
             
-            // 2. Convert to target
             if (to === '°C') return celsius;
             else if (to === '°F') return (celsius * 9/5) + 32;
             else if (to === 'K') return celsius + 273.15;
             return val;
+        }
+    },
+    speed: {
+        base: 'm/s',
+        name: 'Speed',
+        units: {
+            'm/s': { label: 'Meters per second (m/s)', factor: 1.0, description: 'SI unit of speed. Distance of 1 meter covered in 1 second.' },
+            'km/h': { label: 'Kilometers per hour (km/h)', factor: 0.277777778, description: 'Metric speed unit. Commonly used for road traffic speeds.' },
+            'mph': { label: 'Miles per hour (mph)', factor: 0.44704, description: 'Imperial speed unit commonly used in USA and UK.' },
+            'knot': { label: 'Knots (kn)', factor: 0.514444444, description: 'Nautical speed unit equal to 1 nautical mile per hour.' }
+        }
+    },
+    digital: {
+        base: 'B',
+        name: 'Data Storage',
+        units: {
+            'B': { label: 'Bytes (B)', factor: 1.0, description: 'Basic unit of digital information, consisting of 8 bits.' },
+            'KB': { label: 'Kilobytes (KB)', factor: 1024.0, description: 'Equal to 1,024 Bytes.' },
+            'MB': { label: 'Megabytes (MB)', factor: 1048576.0, description: 'Equal to 1,024 KB or 1,048,576 Bytes.' },
+            'GB': { label: 'Gigabytes (GB)', factor: 1073741824.0, description: 'Equal to 1,024 MB. Common unit for RAM and hard drives.' },
+            'TB': { label: 'Terabytes (TB)', factor: 1099511627776.0, description: 'Equal to 1,024 GB.' }
+        }
+    },
+    time: {
+        base: 's',
+        name: 'Time',
+        units: {
+            's': { label: 'Seconds (s)', factor: 1.0, description: 'SI base unit of time duration.' },
+            'min': { label: 'Minutes (min)', factor: 60.0, description: 'Equal to 60 seconds.' },
+            'hr': { label: 'Hours (hr)', factor: 3600.0, description: 'Equal to 60 minutes or 3,600 seconds.' },
+            'day': { label: 'Days (d)', factor: 86400.0, description: 'Equal to 24 hours or 86,400 seconds.' }
         }
     }
 };
@@ -96,6 +125,15 @@ const btnClearInput = document.getElementById('btn-clear-input');
 const btnSwapUnits = document.getElementById('btn-swap-units');
 const btnCopyResult = document.getElementById('btn-copy-result');
 const btnResetView = document.getElementById('btn-reset-view');
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+            console.log('SW registration note:', err);
+        });
+    });
+}
 
 // Initialize SPA Routing
 document.addEventListener('DOMContentLoaded', () => {
@@ -282,8 +320,6 @@ function triggerRecalculation() {
     if (visualizerReady) {
         updateVisualization(currentCategory, val, fromUnit, toUnit, result);
     }
-    // Create label for result (optional, using result)
-    const labelTo = createTextSprite(`${formatNumber(result)} ${toUnit}`, '#8b5cf6');
 }
 
 // Update the numerical output elements
@@ -309,7 +345,6 @@ function updateOutputText(val, fromUnit, toUnit, result) {
     }
     
     formulaDisplay.textContent = `1 ${fromUnit} = ${formatNumber(baseResult)} ${toUnit}`;
-    const labelTo = createTextSprite(`${formatNumber(toVal)} ${toUnit}`, '#8b5cf6');
 
     // 4. Update the info box description
     const fromDesc = catData.units[fromUnit].description || '';

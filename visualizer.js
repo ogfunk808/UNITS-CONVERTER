@@ -272,6 +272,15 @@ function updateVisualization(category, fromVal, fromUnit, toUnit, toVal) {
         case 'temperature':
             showTemperatureVisualization(fromVal, fromUnit, toUnit, toVal);
             break;
+        case 'speed':
+            showSpeedVisualization(fromVal, fromUnit, toUnit, toVal);
+            break;
+        case 'digital':
+            showDigitalVisualization(fromVal, fromUnit, toUnit, toVal);
+            break;
+        case 'time':
+            showTimeVisualization(fromVal, fromUnit, toUnit, toVal);
+            break;
     }
 }
 
@@ -944,17 +953,153 @@ function updateParticles() {
 }
 
 
+// --- 6. SPEED VISUALIZER ---
+function showSpeedVisualization(fromVal, fromUnit, toUnit, toVal) {
+    const mpsFrom = fromVal * getUnitFactor('speed', fromUnit);
+    const mpsTo = toVal * getUnitFactor('speed', toUnit);
+
+    // Create 3D track platform
+    const trackGeom = new THREE.BoxGeometry(6, 0.2, 2);
+    const trackMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+    const track = new THREE.Mesh(trackGeom, trackMat);
+    track.position.set(0, 0.1, 0);
+    track.receiveShadow = true;
+    activeGroup.add(track);
+
+    // Glowing speed orb / craft (Left - From)
+    const craftFromGeom = new THREE.ConeGeometry(0.3, 0.8, 16);
+    craftFromGeom.rotateZ(-Math.PI / 2);
+    const craftFromMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x06b6d4, emissiveIntensity: 0.5 });
+    const craftFrom = new THREE.Mesh(craftFromGeom, craftFromMat);
+    craftFrom.position.set(-2, 0.6, -0.4);
+    craftFrom.castShadow = true;
+    activeGroup.add(craftFrom);
+
+    // Glowing speed orb / craft (Right - To)
+    const craftToGeom = new THREE.ConeGeometry(0.3, 0.8, 16);
+    craftToGeom.rotateZ(-Math.PI / 2);
+    const craftToMat = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x8b5cf6, emissiveIntensity: 0.5 });
+    const craftTo = new THREE.Mesh(craftToGeom, craftToMat);
+    craftTo.position.set(-2, 0.6, 0.4);
+    craftTo.castShadow = true;
+    activeGroup.add(craftTo);
+
+    // Speed vector trail particles
+    const speedScale = Math.min(3, Math.max(0.2, mpsFrom / 10));
+    gsap.to(craftFrom.position, { x: 2, duration: Math.max(0.5, 4 / speedScale), repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    gsap.to(craftTo.position, { x: 2, duration: Math.max(0.5, 4 / speedScale), repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+    // Floating Labels
+    const labelFrom = createTextSprite(`${fromVal} ${fromUnit}`, '#06b6d4');
+    labelFrom.position.set(-1.8, 1.8, -0.4);
+    activeGroup.add(labelFrom);
+
+    const labelTo = createTextSprite(`${formatNumberText(toVal)} ${toUnit}`, '#8b5cf6');
+    labelTo.position.set(1.8, 1.8, 0.4);
+    activeGroup.add(labelTo);
+}
+
+// --- 7. DIGITAL DATA VISUALIZER ---
+function showDigitalVisualization(fromVal, fromUnit, toUnit, toVal) {
+    const bytesFrom = fromVal * getUnitFactor('digital', fromUnit);
+    const stackCountFrom = Math.min(8, Math.max(1, Math.ceil(Math.log10(bytesFrom + 1))));
+
+    // Server stack (From)
+    for (let i = 0; i < stackCountFrom; i++) {
+        const geom = new THREE.BoxGeometry(1.4, 0.25, 1.4);
+        const mat = new THREE.MeshStandardMaterial({
+            color: 0x06b6d4,
+            roughness: 0.3,
+            metalness: 0.7,
+            emissive: 0x06b6d4,
+            emissiveIntensity: 0.2
+        });
+        const serverBlock = new THREE.Mesh(geom, mat);
+        serverBlock.position.set(-1.8, 0.2 + i * 0.3, 0);
+        serverBlock.castShadow = true;
+        activeGroup.add(serverBlock);
+    }
+
+    // Server stack (To)
+    for (let i = 0; i < stackCountFrom; i++) {
+        const geom = new THREE.BoxGeometry(1.4, 0.25, 1.4);
+        const mat = new THREE.MeshStandardMaterial({
+            color: 0x8b5cf6,
+            roughness: 0.3,
+            metalness: 0.7,
+            emissive: 0x8b5cf6,
+            emissiveIntensity: 0.2
+        });
+        const serverBlock = new THREE.Mesh(geom, mat);
+        serverBlock.position.set(1.8, 0.2 + i * 0.3, 0);
+        serverBlock.castShadow = true;
+        activeGroup.add(serverBlock);
+    }
+
+    // Floating Labels
+    const labelFrom = createTextSprite(`${fromVal} ${fromUnit}`, '#06b6d4');
+    labelFrom.position.set(-1.8, 0.5 + stackCountFrom * 0.3, 0);
+    activeGroup.add(labelFrom);
+
+    const labelTo = createTextSprite(`${formatNumberText(toVal)} ${toUnit}`, '#8b5cf6');
+    labelTo.position.set(1.8, 0.5 + stackCountFrom * 0.3, 0);
+    activeGroup.add(labelTo);
+}
+
+// --- 8. TIME VISUALIZER ---
+function showTimeVisualization(fromVal, fromUnit, toUnit, toVal) {
+    const secFrom = fromVal * getUnitFactor('time', fromUnit);
+
+    // Glowing Holographic Clock Ring
+    const ringGeom = new THREE.TorusGeometry(1.6, 0.08, 16, 64);
+    const ringMatFrom = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x06b6d4, emissiveIntensity: 0.5 });
+    const ringFrom = new THREE.Mesh(ringGeom, ringMatFrom);
+    ringFrom.position.set(-1.8, 1.8, 0);
+    activeGroup.add(ringFrom);
+
+    const ringMatTo = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x8b5cf6, emissiveIntensity: 0.5 });
+    const ringTo = new THREE.Mesh(ringGeom, ringMatTo);
+    ringTo.position.set(1.8, 1.8, 0);
+    activeGroup.add(ringTo);
+
+    // Rotating clock hands
+    const handGeom = new THREE.BoxGeometry(0.06, 1.2, 0.06);
+    handGeom.translate(0, 0.5, 0);
+    
+    const handFrom = new THREE.Mesh(handGeom, ringMatFrom);
+    handFrom.position.set(-1.8, 1.8, 0);
+    activeGroup.add(handFrom);
+
+    const handTo = new THREE.Mesh(handGeom, ringMatTo);
+    handTo.position.set(1.8, 1.8, 0);
+    activeGroup.add(handTo);
+
+    const speedRatio = Math.min(5, Math.max(0.1, secFrom / 60));
+    gsap.to(handFrom.rotation, { z: `-=${Math.PI * 2}`, duration: Math.max(1, 6 / speedRatio), repeat: -1, ease: 'none' });
+    gsap.to(handTo.rotation, { z: `-=${Math.PI * 2}`, duration: Math.max(1, 6 / speedRatio), repeat: -1, ease: 'none' });
+
+    // Floating Labels
+    const labelFrom = createTextSprite(`${fromVal} ${fromUnit}`, '#06b6d4');
+    labelFrom.position.set(-1.8, 3.6, 0);
+    activeGroup.add(labelFrom);
+
+    const labelTo = createTextSprite(`${formatNumberText(toVal)} ${toUnit}`, '#8b5cf6');
+    labelTo.position.set(1.8, 3.6, 0);
+    activeGroup.add(labelTo);
+}
+
 // --- UTILITY MATHEMATICAL CONTROLS ---
 function getUnitFactor(category, unitKey) {
-    // Import conversion factor dynamically
-    // A standard fall-back mapping
     const factors = {
         length: { m: 1, km: 1000, cm: 0.01, mm: 0.001, mi: 1609.344, yd: 0.9144, ft: 0.3048, in: 0.0254 },
         area: { 'm²': 1, 'km²': 1000000, 'cm²': 0.0001, 'mi²': 2589988.11, ac: 4046.856, ha: 10000, 'ft²': 0.09290304 },
         volume: { L: 1, mL: 0.001, 'm³': 1000, gal: 3.78541178, qt: 0.94635294, cup: 0.23658823, 'fl oz': 0.02957352 },
-        mass: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.45359237, oz: 0.028349523, st: 6.35029318 }
+        mass: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.45359237, oz: 0.028349523, st: 6.35029318 },
+        speed: { 'm/s': 1.0, 'km/h': 0.277777778, 'mph': 0.44704, 'knot': 0.514444444 },
+        digital: { 'B': 1.0, 'KB': 1024.0, 'MB': 1048576.0, 'GB': 1073741824.0, 'TB': 1099511627776.0 },
+        time: { 's': 1.0, 'min': 60.0, 'hr': 3600.0, 'day': 86400.0 }
     };
-    return factors[category][unitKey] || 1.0;
+    return (factors[category] && factors[category][unitKey]) || 1.0;
 }
 
 function formatNumberText(num) {
