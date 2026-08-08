@@ -20,12 +20,14 @@ function initVisualizer(canvasId, loaderId, onReady) {
     scene.fog = new THREE.FogExp2(0x020617, 0.015);
 
     // 2. Setup Camera
-    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    const width = container.clientWidth || 800;
+    const height = container.clientHeight || 500;
+    camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 5, 12);
 
     // 3. Setup WebGL Renderer
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -50,13 +52,17 @@ function initVisualizer(canvasId, loaderId, onReady) {
     scene.add(particlesGroup);
 
     // 7. Handle Window Resizing
-    const resizeObserver = new ResizeObserver(() => {
-        if (!container.clientWidth || !container.clientHeight) return;
-        camera.aspect = container.clientWidth / container.clientHeight;
+    const handleResize = () => {
+        const w = container.clientWidth || 800;
+        const h = container.clientHeight || 500;
+        camera.aspect = w / h;
         camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
+        renderer.setSize(w, h);
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
+    window.addEventListener('resize', handleResize);
 
     // 8. Start Render Loop
     animate();

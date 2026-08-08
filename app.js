@@ -331,7 +331,7 @@ function updateOutputText(val, fromUnit, toUnit, result) {
     outputUnitDisplay.textContent = toUnit;
 
     // 2. Scientific notation display
-    outputScientific.textContent = result.toExponential(4);
+    outputScientific.textContent = (isNaN(result) || result === 0) ? "0e+0" : result.toExponential(4);
 
     // 3. Formula banner
     let formulaUnitBase = 1;
@@ -355,17 +355,15 @@ function updateOutputText(val, fromUnit, toUnit, result) {
     `;
 }
 
-// Helper to format float output beautifully
+// Helper to format float output beautifully and cleanly
 function formatNumber(num) {
-    if (num === 0) return '0.00';
+    if (num === 0 || isNaN(num)) return '0';
     const absVal = Math.abs(num);
-    if (absVal < 1e-4 || absVal > 1e6) {
+    if (absVal < 1e-5 || absVal >= 1e8) {
         return num.toExponential(4);
     }
-    // Float values formatting dynamically based on scale
-    if (absVal >= 100) return num.toFixed(2);
-    if (absVal >= 1) return num.toFixed(4);
-    return num.toFixed(6);
+    // Clean string representation without extra trailing zero artifacts
+    return parseFloat(num.toFixed(6)).toString();
 }
 
 // Toast notification helper
