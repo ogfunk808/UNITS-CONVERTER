@@ -74,11 +74,33 @@ function initVisualizer(canvasId, loaderId, onReady) {
     if (typeof onReady === 'function') onReady();
 }
 
+let isAutoRotating = true;
+
 // Reset camera to default position
 function resetCamera() {
     if (!camera || !controls) return;
     gsap.to(camera.position, { x: 0, y: 5, z: 12, duration: 0.8, ease: 'power2.out' });
     gsap.to(controls.target, { x: 0, y: 2, z: 0, duration: 0.8, ease: 'power2.out', onUpdate: () => controls.update() });
+}
+
+// Top Down view camera angle
+function setTopView() {
+    if (!camera || !controls) return;
+    gsap.to(camera.position, { x: 0, y: 16, z: 0.1, duration: 0.8, ease: 'power2.out' });
+    gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 0.8, ease: 'power2.out', onUpdate: () => controls.update() });
+}
+
+// Front Eye Level view camera angle
+function setFrontView() {
+    if (!camera || !controls) return;
+    gsap.to(camera.position, { x: 0, y: 2, z: 12, duration: 0.8, ease: 'power2.out' });
+    gsap.to(controls.target, { x: 0, y: 2, z: 0, duration: 0.8, ease: 'power2.out', onUpdate: () => controls.update() });
+}
+
+// Toggle continuous 3D idle spin
+function toggleAutoRotate() {
+    isAutoRotating = !isAutoRotating;
+    return isAutoRotating;
 }
 
 // Set up lighting & background grid helper
@@ -1123,9 +1145,8 @@ function animate() {
     animFrameId = requestAnimationFrame(animate);
 
     // Rotate the visualizer group gently for added visual dimension
-    if (activeGroup && activeGroup.children.length > 0) {
-        // Slow lazy idle rotations
-        activeGroup.rotation.y += 0.0018;
+    if (isAutoRotating && activeGroup && activeGroup.children.length > 0) {
+        activeGroup.rotation.y += 0.0025;
     }
 
     // Move floating items
@@ -1135,4 +1156,4 @@ function animate() {
     if (renderer && scene && camera) renderer.render(scene, camera);
 }
 
-export { initVisualizer, resetCamera, updateVisualization };
+export { initVisualizer, resetCamera, setTopView, setFrontView, toggleAutoRotate, updateVisualization };

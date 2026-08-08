@@ -1,4 +1,4 @@
-import { initVisualizer, resetCamera, updateVisualization } from './visualizer.js';
+import { initVisualizer, resetCamera, setTopView, setFrontView, toggleAutoRotate, updateVisualization } from './visualizer.js';
 
 // Unit Definitions & Conversion Data
 const CONVERSIONS = {
@@ -247,12 +247,60 @@ function setupConverterEvents() {
         });
     });
 
-    // Reset camera button
+    // Quick Presets Handler
+    document.querySelectorAll('.preset-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            inputVal.value = e.currentTarget.dataset.val;
+            gsap.fromTo(inputVal, { scale: 0.96 }, { scale: 1, duration: 0.2 });
+            triggerRecalculation();
+        });
+    });
+
+    // Reset camera button in header
     btnResetView.addEventListener('click', () => {
         resetCamera();
         const resetIcon = btnResetView.querySelector('i');
         gsap.to(resetIcon, { rotate: '+=360', duration: 0.5 });
     });
+
+    // 3D Camera Toolbar Event Handlers
+    const camResetBtn = document.getElementById('btn-cam-reset');
+    const camTopBtn = document.getElementById('btn-cam-top');
+    const camFrontBtn = document.getElementById('btn-cam-front');
+    const camSpinBtn = document.getElementById('btn-cam-spin');
+
+    const updateCamActive = (activeBtn) => {
+        [camResetBtn, camTopBtn, camFrontBtn].forEach(b => b && b.classList.remove('active'));
+        if (activeBtn) activeBtn.classList.add('active');
+    };
+
+    if (camResetBtn) {
+        camResetBtn.addEventListener('click', () => {
+            resetCamera();
+            updateCamActive(camResetBtn);
+        });
+    }
+
+    if (camTopBtn) {
+        camTopBtn.addEventListener('click', () => {
+            setTopView();
+            updateCamActive(camTopBtn);
+        });
+    }
+
+    if (camFrontBtn) {
+        camFrontBtn.addEventListener('click', () => {
+            setFrontView();
+            updateCamActive(camFrontBtn);
+        });
+    }
+
+    if (camSpinBtn) {
+        camSpinBtn.addEventListener('click', () => {
+            const isSpinning = toggleAutoRotate();
+            camSpinBtn.classList.toggle('active', isSpinning);
+        });
+    }
 }
 
 // Transition to new unit category

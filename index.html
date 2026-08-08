@@ -154,20 +154,32 @@
                             </div>
                         </div>
 
+                        <!-- Quick Presets -->
+                        <div class="quick-presets-row">
+                            <span class="quick-preset-label"><i class="fa-solid fa-bolt"></i> Quick Input:</span>
+                            <button class="preset-pill" data-val="1">1</button>
+                            <button class="preset-pill" data-val="5">5</button>
+                            <button class="preset-pill" data-val="10">10</button>
+                            <button class="preset-pill" data-val="100">100</button>
+                            <button class="preset-pill" data-val="1000">1,000</button>
+                        </div>
+
                         <!-- Output Panel -->
-                        <div class="output-container glass-panel-inner">
+                        <div class="output-container glass-panel-inner" id="output-card">
                             <div class="output-header">
-                                <span class="output-label">Result</span>
+                                <div class="output-title-group">
+                                    <span class="output-label">Conversion Result</span>
+                                    <span class="scientific-pill" id="output-scientific"><i class="fa-solid fa-atom"></i> 1e+0</span>
+                                </div>
                                 <button class="copy-btn" id="btn-copy-result" title="Copy result to clipboard">
-                                    <i class="fa-solid fa-copy"></i>
+                                    <i class="fa-solid fa-copy"></i> Copy
                                 </button>
                             </div>
                             <div class="output-formula" id="formula-display">1 m = 1 m</div>
                             <div class="output-display">
-                                <span class="output-number" id="output-value-display">1.00</span>
+                                <span class="output-number" id="output-value-display">1</span>
                                 <span class="output-unit" id="output-unit-display">m</span>
                             </div>
-                            <div class="output-scientific-display" id="output-scientific">1e+0</div>
                         </div>
                     </div>
 
@@ -178,7 +190,23 @@
                                 <i class="fa-solid fa-cube glow-text"></i>
                                 <span>3D Interactive Sandbox</span>
                             </div>
-                            <div class="visualizer-badge" id="visualization-mode-badge">Length comparison</div>
+                            <div class="visualizer-badge" id="visualization-mode-badge">Length sandbox</div>
+                        </div>
+
+                        <!-- 3D Camera Controls Toolbar -->
+                        <div class="camera-toolbar">
+                            <button class="cam-btn active" id="btn-cam-reset" title="Reset Camera View">
+                                <i class="fa-solid fa-rotate-left"></i> 3D Reset
+                            </button>
+                            <button class="cam-btn" id="btn-cam-top" title="Top Down View">
+                                <i class="fa-solid fa-arrows-up-to-line"></i> Top View
+                            </button>
+                            <button class="cam-btn" id="btn-cam-front" title="Front Eye View">
+                                <i class="fa-solid fa-eye"></i> Front View
+                            </button>
+                            <button class="cam-btn" id="btn-cam-spin" title="Toggle 3D Auto Spin">
+                                <i class="fa-solid fa-arrows-spin"></i> Auto Spin
+                            </button>
                         </div>
                         
                         <div class="canvas-container">
@@ -191,8 +219,8 @@
                             <!-- Visual overlay overlays -->
                             <div class="canvas-controls-overlay">
                                 <div class="visual-tips">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                    <span>Drag to rotate | Scroll to zoom | Right-click-drag to pan</span>
+                                    <i class="fa-solid fa-hand-pointer"></i>
+                                    <span>Left-click + drag to rotate 3D view | Scroll to zoom | Right-click to pan</span>
                                 </div>
                             </div>
                         </div>
